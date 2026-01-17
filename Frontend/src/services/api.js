@@ -1,9 +1,10 @@
 import axios from "axios";
 import { logout } from "../utils/auth";
+console.log("API BASE URL FROM APP:", import.meta.env.VITE_API_BASE_URL);
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 15000,
+  timeout: 60000,
 });
 
 API.interceptors.request.use((req) => {

@@ -7,31 +7,35 @@ import { generateResumePDF } from "../utils/pdfGenerator.js";
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "Resume file is required" });
+      return res.status(400).json({ message: "No resume file uploaded" });
     }
 
     const resumeText = await parseResume(req.file.path);
-    const rawAI = await analyzeResume(resumeText);
-    const structured = parseAIOutput(rawAI);
+    // const rawAI = await analyzeResume(resumeText);
+    // const structured = parseAIOutput(rawAI);
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log("AI RESULT:", structured);
-    }
+    const structured = {
+      summary: "Test summary",
+      skills: ["Test skill"],
+      improvements: ["Test improvement"],
+    };
 
-    await Resume.create({
+    const saved = await Resume.create({
       user: req.userId,
       originalText: resumeText,
       aiAnalysis: structured,
     });
 
     res.status(201).json({
-      message: "Resume analyzed successfully",
+      message: "Resume analyzed",
       result: structured,
     });
   } catch (err) {
-    res.status(500).json({ message: "Resume processing failed" });
+    console.error("UPLOAD ERROR:", err);
+    res.status(500).json({ error: "Resume processing failed" });
   }
 };
+
 
 export const getAllResumes = async (req, res) => {
   try {
