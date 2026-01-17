@@ -10,7 +10,7 @@ app.use(cors(
   {
     origin: [
       "http://localhost:5173",
-      "https://YOUR_FRONTEND_URL.vercel.app"
+      "https://cruxcv.onrender.com/"
     ],
     credentials: true,
   }
@@ -19,7 +19,7 @@ app.use(cors(
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.get("/", (req, res) => {
-  res.send("ResumeCritic.ai Backend is running 🚀");
+  res.send("CruxCV Backend is running 🚀");
 });
 
 export default app;
