@@ -1,6 +1,12 @@
 import PDFDocument from "pdfkit";
 
-export const generateResumePDF = (analysis, res) => {
+export const generateResumePDF = (analysis = {}, res) => {
+  const {
+    summary = "",
+    skills = [],
+    improvements = [],
+  } = analysis;
+
   const doc = new PDFDocument({ margin: 50 });
 
   res.setHeader("Content-Type", "application/pdf");
@@ -12,29 +18,41 @@ export const generateResumePDF = (analysis, res) => {
   doc.pipe(res);
 
   // Title
-  doc.fontSize(22).text("Improved Resume", { align: "center" });
+  doc
+    .fontSize(22)
+    .font("Helvetica-Bold")
+    .text("Improved Resume", { align: "center" });
   doc.moveDown(2);
 
   // Summary
-  doc.fontSize(16).text("Professional Summary");
+  doc.fontSize(16).font("Helvetica-Bold").text("Professional Summary");
   doc.moveDown(0.5);
-  doc.fontSize(12).text(analysis.summary);
+  doc.fontSize(12).font("Helvetica").text(summary, {
+    lineGap: 4,
+  });
   doc.moveDown(1.5);
 
   // Skills
-  doc.fontSize(16).text("Skills");
-  doc.moveDown(0.5);
-  analysis.skills.forEach(skill => {
-    doc.fontSize(12).text(`• ${skill}`);
-  });
-  doc.moveDown(1.5);
+  if (skills.length) {
+    doc.fontSize(16).font("Helvetica-Bold").text("Skills");
+    doc.moveDown(0.5);
+    skills.forEach((skill) => {
+      doc.fontSize(12).font("Helvetica").text(`• ${skill}`);
+    });
+    doc.moveDown(1.5);
+  }
 
   // Improvements
-  doc.fontSize(16).text("Improvement Suggestions");
-  doc.moveDown(0.5);
-  analysis.improvements.forEach(item => {
-    doc.fontSize(12).text(`• ${item}`);
-  });
+  if (improvements.length) {
+    doc
+      .fontSize(16)
+      .font("Helvetica-Bold")
+      .text("Improvement Suggestions");
+    doc.moveDown(0.5);
+    improvements.forEach((item) => {
+      doc.fontSize(12).font("Helvetica").text(`• ${item}`);
+    });
+  }
 
   doc.end();
 };

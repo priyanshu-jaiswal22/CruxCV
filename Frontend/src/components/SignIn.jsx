@@ -14,48 +14,55 @@ import {
   Paper,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useNavigate } from "react-router-dom";
 
 import ForgotPassword from "./ForgotPassword";
 import { loginUser } from "../services/api";
-import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const navigate = useNavigate();
+
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const data = new FormData(e.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
 
     try {
-    const res = await loginUser({ email, password });
+      const res = await loginUser({ email, password });
 
-    // ✅ safety check
-    if (!res?.data?.token) {
-      throw new Error("Token not received");
+      // Safety check
+      if (!res?.data?.token) {
+        throw new Error("Token not received");
+      }
+
+      // Save token
+      localStorage.setItem("token", res.data.token);
+
+      // Redirect
+      navigate("/dashboard");
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        console.error("LOGIN ERROR:", err);
+      }
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
-
-    // ✅ save token
-    localStorage.setItem("token", res.data.token);
-
-    // ✅ redirect to dashboard
-    navigate("/dashboard");
-  } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    setError("Invalid email or password");
-  }
   };
 
   return (
     <>
       <CssBaseline />
 
-      {/* 🔥 Gradient Background */}
+      {/* Background */}
       <Box
         sx={{
           minHeight: "100vh",
@@ -66,7 +73,7 @@ export default function SignIn() {
             "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         }}
       >
-        {/* 🧊 Auth Card */}
+        {/* Card */}
         <Paper
           elevation={10}
           sx={{
@@ -76,7 +83,7 @@ export default function SignIn() {
             borderRadius: 3,
           }}
         >
-          {/* Icon */}
+          {/* Header */}
           <Stack alignItems="center" spacing={1} mb={2}>
             <Box
               sx={{
@@ -90,7 +97,7 @@ export default function SignIn() {
             </Box>
 
             <Typography variant="h5" fontWeight={600}>
-              Sign in to ResumeCritic.ai
+              Sign in to CruxCV
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
@@ -127,7 +134,7 @@ export default function SignIn() {
             )}
 
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox disabled />}
               label="Remember me"
             />
 
@@ -136,6 +143,7 @@ export default function SignIn() {
               fullWidth
               size="large"
               variant="contained"
+              disabled={loading}
               sx={{
                 mt: 2,
                 py: 1.2,
@@ -143,7 +151,7 @@ export default function SignIn() {
                 borderRadius: 2,
               }}
             >
-              Sign In
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
 
             <Button
@@ -162,6 +170,7 @@ export default function SignIn() {
             </Typography>
           </Box>
 
+          {/* Forgot password dialog */}
           <ForgotPassword open={open} handleClose={() => setOpen(false)} />
         </Paper>
       </Box>

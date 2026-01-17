@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post("/upload", authMiddleware, upload.single("resume"), uploadResume);
 router.get("/all", authMiddleware ,getAllResumes);
-router.get("/download/:id", downloadResumePDF);
+router.get("/download/:id", authMiddleware, downloadResumePDF);
 
 export default router;

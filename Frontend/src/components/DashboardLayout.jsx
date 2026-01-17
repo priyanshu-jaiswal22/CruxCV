@@ -8,14 +8,15 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated, logout } from "../utils/auth";
 
 export default function DashboardLayout({ children }) {
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = isAuthenticated();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    logout();
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -27,10 +28,10 @@ export default function DashboardLayout({ children }) {
             sx={{ flexGrow: 1, cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            ResumeCritic.ai
+            CruxCV
           </Typography>
 
-          {/* 🔐 AUTH BUTTONS */}
+          {/* 🔐 AUTH ACTIONS */}
           {isLoggedIn ? (
             <Button color="inherit" onClick={handleLogout}>
               Logout
@@ -54,12 +55,12 @@ export default function DashboardLayout({ children }) {
 
       <Box
         sx={{
-          minHeight: "calc(100vh - 64px)",
+          minHeight: "100vh",
           backgroundColor: "#f4f6fb",
           py: 4,
         }}
       >
-        <Container maxWidth={false} sx={{ maxWidth: "1400px" }}>
+        <Container maxWidth="xl">
           {children}
         </Container>
       </Box>

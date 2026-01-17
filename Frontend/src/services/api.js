@@ -1,7 +1,9 @@
 import axios from "axios";
+import { logout } from "../utils/auth";
 
 const API = axios.create({
-  baseURL: "https://cruxcv-backend.onrender.com/api"
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 15000,
 });
 
 API.interceptors.request.use((req) => {
@@ -12,6 +14,17 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+API.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      logout();
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const registerUser = (data) =>
   API.post("/auth/register", data);
 
@@ -21,9 +34,12 @@ export const loginUser = (data) =>
 export const uploadResume = (file) => {
   const formData = new FormData();
   formData.append("resume", file);
-  return API.post("/resume/upload", formData);
+  return API.post("/resume/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
 export const fetchResumeHistory = () =>
   API.get("/resume/all");
 
+export default API;

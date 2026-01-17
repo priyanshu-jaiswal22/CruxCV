@@ -19,7 +19,7 @@ export default function Landing() {
     >
       <Stack spacing={3} maxWidth={700}>
         <Typography variant="h3" fontWeight={700}>
-          ResumeCritic.ai
+          CruxCV
         </Typography>
 
         <Typography variant="h6" sx={{ opacity: 0.9 }}>

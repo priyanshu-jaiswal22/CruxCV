@@ -1,53 +1,88 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import * as React from "react";
+import PropTypes from "prop-types";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  OutlinedInput,
+  Typography,
+} from "@mui/material";
 
 function ForgotPassword({ open, handleClose }) {
+  const [email, setEmail] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!email) return;
+
+    setLoading(true);
+
+    // UI-only simulation (backend not implemented)
+    setTimeout(() => {
+      setMessage(
+        "If an account with this email exists, a password reset link has been sent."
+      );
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleDialogClose = () => {
+    setEmail("");
+    setMessage("");
+    setLoading(false);
+    handleClose();
+  };
+
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
-      slotProps={{
-        paper: {
-          component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            handleClose();
-          },
-          sx: { backgroundImage: 'none' },
-        },
+      onClose={handleDialogClose}
+      PaperProps={{
+        component: "form",
+        onSubmit: handleSubmit,
+        sx: { backgroundImage: "none" },
       }}
     >
-      <DialogTitle>Reset password</DialogTitle>
-      <DialogContent
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
-      >
+      <DialogTitle>Reset your password</DialogTitle>
+
+      <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <DialogContentText>
-          Enter your account&apos;s email address, and we&apos;ll send you a link to
-          reset your password.
+          Enter your email address and we&apos;ll send you a link to reset your
+          password.
         </DialogContentText>
+
         <OutlinedInput
           autoFocus
           required
-          margin="dense"
-          id="email"
-          name="email"
-          label="Email address"
-          placeholder="Email address"
           type="email"
-          fullWidth
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+
+        {message && (
+          <Typography color="success.main" variant="body2">
+            {message}
+          </Typography>
+        )}
       </DialogContent>
+
       <DialogActions sx={{ pb: 3, px: 3 }}>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" type="submit">
-          Continue
+        <Button onClick={handleDialogClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={loading || !!message}
+        >
+          {loading ? "Sending..." : "Continue"}
         </Button>
       </DialogActions>
     </Dialog>

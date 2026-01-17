@@ -5,26 +5,29 @@ const resumeSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
+      index: true, 
     },
     originalText: {
       type: String,
-      required: true
+      required: true,
+      maxlength: 50000, 
     },
     aiAnalysis: {
-    summary: {
-      type: String,
-      required: true
+      summary: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      skills: {
+        type: [String],
+        default: [],
+      },
+      improvements: {
+        type: [String],
+        default: [],
+      },
     },
-    skills: {
-      type: [String],
-      default: []
-    },
-    improvements: {
-      type: [String],
-      default: []
-    }
-  }
   },
   { timestamps: true }
 );

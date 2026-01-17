@@ -12,39 +12,53 @@ import {
   Link,
 } from "@mui/material";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-
 import { useNavigate } from "react-router-dom";
+
 import { registerUser } from "../services/api";
 
 export default function SignUp() {
   const navigate = useNavigate();
+
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const data = new FormData(e.currentTarget);
     const name = data.get("name");
     const email = data.get("email");
     const password = data.get("password");
 
+    // Basic frontend validation
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await registerUser({ name, email, password });
 
-      // ✅ Ensure token exists
-      if (!res.data.token) {
+      // Safety check
+      if (!res?.data?.token) {
         throw new Error("Token not received");
       }
 
+      // Save token
       localStorage.setItem("token", res.data.token);
 
-      // ✅ Redirect using router
+      // Redirect
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Signup failed"
-      );
+      if (import.meta.env.DEV) {
+        console.error("SIGNUP ERROR:", err);
+      }
+      setError(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +66,7 @@ export default function SignUp() {
     <>
       <CssBaseline />
 
-      {/* 🔥 Gradient Background */}
+      {/* Background */}
       <Box
         sx={{
           minHeight: "100vh",
@@ -63,7 +77,7 @@ export default function SignUp() {
             "linear-gradient(135deg, #43cea2 0%, #185a9d 100%)",
         }}
       >
-        {/* 🧊 Signup Card */}
+        {/* Card */}
         <Paper
           elevation={12}
           sx={{
@@ -87,7 +101,7 @@ export default function SignUp() {
             </Box>
 
             <Typography variant="h5" fontWeight={600}>
-              Create your account
+              Create your CruxCV account
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
@@ -137,6 +151,7 @@ export default function SignUp() {
               fullWidth
               size="large"
               variant="contained"
+              disabled={loading}
               sx={{
                 mt: 3,
                 py: 1.2,
@@ -144,7 +159,7 @@ export default function SignUp() {
                 borderRadius: 2,
               }}
             >
-              Sign Up
+              {loading ? "Creating account..." : "Sign Up"}
             </Button>
 
             <Typography align="center" sx={{ mt: 2 }}>

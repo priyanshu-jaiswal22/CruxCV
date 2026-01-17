@@ -10,9 +10,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
-  
+
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+
         <Route
           path="/dashboard"
           element={
@@ -21,6 +22,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
