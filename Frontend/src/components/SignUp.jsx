@@ -43,15 +43,15 @@ export default function SignUp() {
       const res = await registerUser({ name, email, password });
 
       // Safety check
-      if (!res?.data?.token) {
-        throw new Error("Token not received");
+      const token = res?.data?.token;
+
+      if (!token) {
+        throw new Error("Signup failed: token missing");
       }
 
-      // Save token
-      localStorage.setItem("token", res.data.token);
-
-      // Redirect
+      localStorage.setItem("token", token);
       navigate("/dashboard");
+
     } catch (err) {
       if (import.meta.env.DEV) {
         console.error("SIGNUP ERROR:", err);
