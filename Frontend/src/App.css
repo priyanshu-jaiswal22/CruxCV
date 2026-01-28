@@ -1,42 +1,88 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.landingPageContainer {
+  width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #083ded, #de07db);
+  font-family: 'Poppins', sans-serif;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+}
+
+.landingPageContainer nav {
+  padding-inline: 1.2rem;
+  padding-block: 1.6rem;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+}
+
+.landingPageContainer nav .navList {
+  background-color: rgba(255, 255, 255, 0.247);
+  backdrop-filter: blur(16px);
+  display: flex;
+  height: 3rem;
+  width: fit-content; 
+  border-radius: 1.4rem;
+  cursor: pointer;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+  gap: 25rem;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 400;
+  transition: all 0.3s ease-in-out;
+   
+}
+.navList button:hover {
+  color: rgb(70, 9, 63);
+  cursor: pointer;
+  transform: scale(1.05);
+}
+.btn:hover {
+  color: rgb(70, 9, 63);
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.landingMainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  gap:1rem;
+}
+
+.landingMainContainer p {
+  display: flex;
+  max-width: 450px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button{
+  line-height: 2.4rem;
+  padding: 0 1.25rem;
+  text-align: center;
+  font-size: 1.2rem;
+  background-color: #ed3df4;
+  color: #fff;
+  border: none;
+  border-radius: 3.5rem;
+  box-shadow: 0 .25rem 0.35rem rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease; 
+  cursor: pointer;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.navbtn {
+  display: flex;
+  gap: 1rem;
 }
